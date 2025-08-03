@@ -11,10 +11,12 @@ type Message = {
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);//
   const [isLoading, setIsLoading] = useState(false);//
+  console.log("messages", messages);
 
   const handleSend = async (message: string, files?: File[]) => {//2components as an input
+    console.log("handleSend2 function called");
     if (!message.trim()) return;//no blank meesages//no unecessary api calls
-    
+    console.log("handleSend function called");
     const userMessage: Message = {
       text: message,
       sender: "user",
@@ -41,6 +43,7 @@ export default function ChatPage() {
       };
       setMessages((prev) => [...prev, assistantMessage]);
       setIsLoading(false);
+      console.log("messages", messages);
     }, 1000);
   };
 
@@ -83,7 +86,7 @@ export default function ChatPage() {
           </div>
         </div>
 
-        {/* Messages */}
+        {/*Initial setup Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.length === 0 ? (
             <div className="flex items-center justify-center h-full">
@@ -110,11 +113,11 @@ export default function ChatPage() {
                       : "bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600"
                   }`}
                 >
-                  <div className="text-sm">{msg.text}</div>
+                  <div className="text-sm">{msg.text}</div>{/*this is the message*/}
                   <div className={`text-xs mt-1 ${
                     msg.sender === "user" ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
                   }`}>
-                    {formatTime(msg.timestamp)}
+                    {formatTime(msg.timestamp)}{/*this is the time*/}
                   </div>
                 </div>
               </div>
@@ -132,6 +135,7 @@ export default function ChatPage() {
             </div>
           )}
         </div>
+        {/* Page.tsx simplified!!*/}
 
         {/* Input Area */}
         <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
@@ -141,3 +145,7 @@ export default function ChatPage() {
     </div>
   );
 }
+//What is ChatInput?
+//ChatInput is a component that allows the user to send messages to the AI assistant.
+//It is a child component of the ChatPage component.
+//It is a child component of the ChatPage component

@@ -4,21 +4,29 @@ type ChatInputProps = {
   onSend: (message: string, files?: File[]) => void;
   isLoading: boolean;
 };
-
+//props are the properties that are passed to the component
 export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
+ 
   const [message, setMessage] = useState("");
+  
   const [files, setFiles] = useState<File[]>([]);
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
+  //fileInputRef is a ref to the file input element
 
   const handleSend = () => {
+   
     if (message.trim() || files.length > 0) {
       onSend(message, files);
       setMessage("");
       setFiles([]);
+      console.log("message", message);
+      console.log("files", files);
     }
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    console.log("handleKeyDown function called");
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -26,6 +34,7 @@ export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log("handleFileChange function called");
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
       setFiles((prev) => [...prev, ...newFiles]);
@@ -104,6 +113,7 @@ export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
         <button
           onClick={handleSend}
           disabled={isLoading || (!message.trim() && files.length === 0)}
+          //added condition to disable button when no message or files
           className="p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Send message"
         >
