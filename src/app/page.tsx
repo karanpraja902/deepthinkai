@@ -1,47 +1,3 @@
-// "use client"
-// import { useState } from "react";
-// import ChatInput from "./chat/ChatInput";
-// // import ChatSidebar from "./chat/ChatSidebar";
-
-// type Message = {
-//   text: string;
-//   sender: string;
-// };
-
-// export default function ChatPage() {
-//   const [messages, setMessages] = useState<Message[]>([]);
-//   const [isLoading, setIsLoading] = useState(false);
-
-//   const handleSend = async (message: string, files?: File[]) => {
-//     setIsLoading(true);
-//     // Simulate API call (replace with your actual logic)
-//     setTimeout(() => {
-//       setMessages((prev) => [...prev, { text: message, sender: "user" }]);
-//       setIsLoading(false);
-//     }, 1000);
-//   };
-
-//   return (
-//     <div className="flex h-screen">
-//       {/* <ChatSidebar /> */}
-      // asdf?
-//       <div className="flex-1 flex flex-col">
-//         {/* Chat messages list */}
-//         <div className="flex-1 overflow-y-auto p-4">
-//           {messages.map((msg, i) => (
-//             <div key={i} className="mb-2 p-3 bg-gray-100 rounded-lg">
-//               <strong>{msg.sender}:</strong> {msg.text}
-//             </div>
-//           ))}
-//         </div>
-
-//         {/* Input area */}
-//         <ChatInput onSend={handleSend} isLoading={isLoading} />
-//       </div>
-//     </div>
-//   );
-// }
-
 "use client"
 import { useState } from "react";
 import ChatInput from "./chat/ChatInput";
@@ -53,18 +9,26 @@ type Message = {
 };
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);//
+  const [isLoading, setIsLoading] = useState(false);//
 
-  const handleSend = async (message: string, files?: File[]) => {
-    if (!message.trim()) return;
+  const handleSend = async (message: string, files?: File[]) => {//2components as an input
+    if (!message.trim()) return;//no blank meesages//no unecessary api calls
     
     const userMessage: Message = {
       text: message,
       sender: "user",
       timestamp: new Date()
-    };
+    };//
     
+    // Initial: messages = []
+// setMessages((prev) => [...prev, {text: "Hi", sender: "user"}]);
+// prev = [], result = [{text: "Hi", sender: "user"}]
+
+// User sends another message
+// setMessages((prev) => [...prev, {text: "Hello", sender: "user"}]);
+// prev = [{text: "Hi", sender: "user"}]
+// result = [{text: "Hi", sender: "user"}, {text: "Hello", sender: "user"}]
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
     
@@ -81,11 +45,11 @@ export default function ChatPage() {
   };
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });//
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">{/*this is main div}
       {/* Sidebar */}
       <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 hidden lg:block">
         <div className="p-4">
