@@ -9,28 +9,18 @@ type Message = {
 };
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([]);//
-  const [isLoading, setIsLoading] = useState(false);//
-  console.log("messages", messages);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = async (message: string, files?: File[]) => {//2components as an input
-    console.log("handleSend2 function called");
-    if (!message.trim()) return;//no blank meesages//no unecessary api calls
-    console.log("handleSend function called");
+  const handleSend = async (message: string, files?: File[]) => {
+    if (!message.trim()) return;
+    
     const userMessage: Message = {
       text: message,
       sender: "user",
       timestamp: new Date()
-    };//
+    };
     
-    // Initial: messages = []
-// setMessages((prev) => [...prev, {text: "Hi", sender: "user"}]);
-// prev = [], result = [{text: "Hi", sender: "user"}]
-
-// User sends another message
-// setMessages((prev) => [...prev, {text: "Hello", sender: "user"}]);
-// prev = [{text: "Hi", sender: "user"}]
-// result = [{text: "Hi", sender: "user"}, {text: "Hello", sender: "user"}]
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
     
@@ -43,30 +33,53 @@ export default function ChatPage() {
       };
       setMessages((prev) => [...prev, assistantMessage]);
       setIsLoading(false);
-      console.log("messages", messages);
     }, 1000);
   };
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });//
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">{/*this is main div}
+    <div className="flex h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       {/* Sidebar */}
-      <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 hidden lg:block">
-        <div className="p-4">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-4">DeepThink Chat</h1>
+      <div className="w-80 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50 hidden lg:block">
+        <div className="p-6">
+          {/* Logo and Title */}
+          <div className="flex items-center space-x-3 mb-8">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold text-lg">DT</span>
+            </div>
+            <div>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                DeepThink
+              </h1>
+              <p className="text-xs text-slate-500 dark:text-slate-400">AI Chat Assistant</p>
+            </div>
+          </div>
           
           {/* New Chat Button */}
-          <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors mb-4">
-            + New Chat
+          <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-[1.02] mb-6">
+            <div className="flex items-center justify-center space-x-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              <span>New Chat</span>
+            </div>
           </button>
           
           {/* Recent Chats */}
-          <div className="space-y-2">
-            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Recent Chats</h3>
-            <div className="text-sm text-gray-600 dark:text-gray-300">
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center">
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Recent Chats
+            </h3>
+            <div className="text-sm text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-700/50 rounded-lg p-4 text-center">
+              <svg className="w-8 h-8 mx-auto mb-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
               No recent chats
             </div>
           </div>
@@ -76,27 +89,41 @@ export default function ChatPage() {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-700/50 p-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Chat</h2>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-500 dark:text-gray-400">AI Assistant</span>
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            <div className="flex items-center space-x-3">
+              <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Chat</h2>
+              <div className="flex items-center space-x-2 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-sm">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="font-medium">AI Online</span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <button className="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
 
-        {/*Initial setup Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {messages.length === 0 ? (
             <div className="flex items-center justify-center h-full">
-              <div className="text-center">
-                <div className="text-6xl mb-4">🤖</div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  Welcome to DeepThink Chat
+              <div className="text-center max-w-md">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
+                  Welcome to DeepThink
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Start a conversation with the AI assistant
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Start a conversation with your AI assistant. You can type messages, use voice input, or attach files to get started.
                 </p>
               </div>
             </div>
@@ -107,17 +134,20 @@ export default function ChatPage() {
                 className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                  className={`max-w-2xl px-6 py-4 rounded-2xl shadow-sm ${
                     msg.sender === "user"
-                      ? "bg-blue-600 text-white"
-                      : "bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600"
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+                      : "bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700"
                   }`}
                 >
-                  <div className="text-sm">{msg.text}</div>{/*this is the message*/}
-                  <div className={`text-xs mt-1 ${
-                    msg.sender === "user" ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
+                  <div className="text-sm leading-relaxed">{msg.text}</div>
+                  <div className={`text-xs mt-2 flex items-center space-x-1 ${
+                    msg.sender === "user" ? "text-blue-100" : "text-slate-500 dark:text-slate-400"
                   }`}>
-                    {formatTime(msg.timestamp)}{/*this is the time*/}
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>{formatTime(msg.timestamp)}</span>
                   </div>
                 </div>
               </div>
@@ -126,26 +156,25 @@ export default function ChatPage() {
           
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 px-4 py-2 rounded-lg">
-                <div className="flex items-center space-x-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                  <span className="text-sm">AI is thinking...</span>
+              <div className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 px-6 py-4 rounded-2xl shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                  <span className="text-sm font-medium">AI is thinking...</span>
                 </div>
               </div>
             </div>
           )}
         </div>
-        {/* Page.tsx simplified!!*/}
 
         {/* Input Area */}
-        <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-700/50">
           <ChatInput onSend={handleSend} isLoading={isLoading} />
         </div>
       </div>
     </div>
   );
 }
-//What is ChatInput?
-//ChatInput is a component that allows the user to send messages to the AI assistant.
-//It is a child component of the ChatPage component.
-//It is a child component of the ChatPage component
