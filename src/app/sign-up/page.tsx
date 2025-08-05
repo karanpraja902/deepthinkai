@@ -23,12 +23,12 @@ const SignUpPage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value//e.target.name=name of the section and value
     });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault();//why do we use it?
     setIsLoading(true);
     setError("");
     
@@ -63,8 +63,43 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md space-y-8">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 via-purple-400/20 to-pink-400/20 animate-pulse"></div>
+      
+      {/* Background decoration */}
+      <div className="absolute inset-0 opacity-60" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.15'%3E%3Ccircle cx='30' cy='30' r='3'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+      }}></div>
+      
+      {/* Large floating elements */}
+      <div className="absolute top-20 left-20 w-48 h-48 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-pulse"></div>
+      <div className="absolute top-40 right-20 w-48 h-48 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-pulse" style={{animationDelay: '2s'}}></div>
+      <div className="absolute bottom-20 left-40 w-48 h-48 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-pulse" style={{animationDelay: '4s'}}></div>
+      
+      {/* Medium decorative elements */}
+      <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-pink-200 rounded-full mix-blend-multiply filter blur-lg opacity-40 animate-bounce" style={{animationDelay: '1s'}}></div>
+      <div className="absolute bottom-1/3 right-1/3 w-28 h-28 bg-yellow-200 rounded-full mix-blend-multiply filter blur-lg opacity-40 animate-bounce" style={{animationDelay: '3s'}}></div>
+      
+      {/* Small accent elements */}
+      <div className="absolute top-1/3 left-1/4 w-16 h-16 bg-green-200 rounded-full mix-blend-multiply filter blur-md opacity-30 animate-ping" style={{animationDelay: '0.5s'}}></div>
+      <div className="absolute bottom-1/4 right-1/4 w-12 h-12 bg-orange-200 rounded-full mix-blend-multiply filter blur-md opacity-30 animate-ping" style={{animationDelay: '2.5s'}}></div>
+      
+      {/* Geometric shapes */}
+      <div className="absolute top-1/2 left-10 w-20 h-20 bg-cyan-200 rotate-45 mix-blend-multiply filter blur-lg opacity-30 animate-spin" style={{animationDuration: '20s'}}></div>
+      <div className="absolute bottom-1/2 right-10 w-16 h-16 bg-violet-200 rotate-45 mix-blend-multiply filter blur-lg opacity-30 animate-spin" style={{animationDuration: '15s', animationDirection: 'reverse'}}></div>
+      
+      {/* Particle effect */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-10 left-1/2 w-2 h-2 bg-white rounded-full animate-ping" style={{animationDelay: '0s'}}></div>
+        <div className="absolute top-20 left-1/3 w-1 h-1 bg-white rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
+        <div className="absolute top-30 left-2/3 w-1.5 h-1.5 bg-white rounded-full animate-ping" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-40 left-1/4 w-1 h-1 bg-white rounded-full animate-ping" style={{animationDelay: '3s'}}></div>
+        <div className="absolute top-50 left-3/4 w-2 h-2 bg-white rounded-full animate-ping" style={{animationDelay: '4s'}}></div>
+        <div className="absolute top-60 left-1/6 w-1.5 h-1.5 bg-white rounded-full animate-ping" style={{animationDelay: '5s'}}></div>
+      </div>
+      
+      <div className="w-full max-w-md space-y-8 relative z-10">
         <div className="text-center">
           <Image 
             src="/deepthink-logo.svg" 
@@ -79,8 +114,8 @@ const SignUpPage = () => {
           </h2>
         </div>
         
-        <Card>
-          <CardContent className="pt-6">
+                 <Card className="backdrop-blur-md bg-white/90 shadow-2xl border-0 ring-1 ring-white/20">
+           <CardContent className="pt-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
                 <div className="text-red-600 text-sm bg-red-50 p-3 rounded-md">
