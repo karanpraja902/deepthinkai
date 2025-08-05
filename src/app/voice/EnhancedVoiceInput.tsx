@@ -5,12 +5,18 @@ interface EnhancedVoiceInputProps {
   onTranscript: (text: string) => void;
   isListening: boolean;
   onListeningChange: (listening: boolean) => void;
+  language?: string;
+  continuous?: boolean;
+  interimResults?: boolean;
 }
 
 export default function EnhancedVoiceInput({
   onTranscript, 
   isListening, 
-  onListeningChange
+  onListeningChange,
+  language = 'en-US',
+  continuous = false,
+  interimResults = true
 }: EnhancedVoiceInputProps) {
   const [isSupported, setIsSupported] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,16 +25,14 @@ export default function EnhancedVoiceInput({
 
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    // Chrome/Edge: webkitSpeechRecognition│
-// │ Firefox: SpeechRecognition          │
-// │ Safari: webkitSpeechRecognition
+    
     if (SpeechRecognition) {
       setIsSupported(true);
       
       const recognition = new SpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = true;
-      recognition.lang = 'en-US';
+      recognition.continuous = continuous;
+      recognition.interimResults = interimResults;
+      recognition.lang = language;
       
       recognition.onstart = () => {
         console.log('Voice recognition started');
@@ -102,7 +106,7 @@ export default function EnhancedVoiceInput({
         recognitionRef.current.stop();
       }
     };
-  }, [onTranscript, onListeningChange]);
+  }, [onTranscript, onListeningChange, language, continuous, interimResults]);
 
   const toggleListening = () => {
     if (!recognitionRef.current) return;

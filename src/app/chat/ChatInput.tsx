@@ -1,5 +1,6 @@
 import { useState, useRef, KeyboardEvent, ChangeEvent } from "react";
 import EnhancedVoiceInput from "../voice/EnhancedVoiceInput";
+import VoiceSettings from "../voice/VoiceSettings";
 
 type ChatInputProps = {
   onSend: (message: string, files?: File[]) => void;
@@ -10,6 +11,11 @@ export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [isVoiceListening, setIsVoiceListening] = useState(false);
+  const [voiceSettings, setVoiceSettings] = useState({
+    language: 'en-US',
+    continuous: false,
+    interimResults: true
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSend = () => {
@@ -25,7 +31,13 @@ export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
       e.preventDefault();
       handleSend();
     }
-  };
+  };//handleKeyDown is a function that is called when the user presses a key on the keyboard.
+  //It is used to handle the Enter key.
+  //It is used to handle the Shift+Enter key.
+  //It is used to handle the Ctrl+Enter key.
+  //It is used to handle the Alt+Enter key.
+  //It is used to handle the Meta+Enter key.
+  //It is used to handle the Ctrl+Shift+Enter key.
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -116,17 +128,30 @@ export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
               placeholder="Type your message..."
               disabled={isLoading}
               rows={1}
-              className="w-full bg-transparent border-none outline-none resize-none text-sm leading-relaxed placeholder-slate-500 dark:placeholder-slate-400 focus:ring-0"
+              className="w-full h-full bg-transparent border-none outline-none resize-none text-sm leading-relaxed placeholder-slate-500 dark:placeholder-slate-400 focus:ring-0"
             />
           </div>
 
-          {/* Right side - Voice and Send buttons */}
+          {/* Right side - Voice settings, Voice input, and Send buttons */}
           <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+            {/* Voice settings button */}
+            <VoiceSettings
+              language={voiceSettings.language}
+              onLanguageChange={(lang) => setVoiceSettings(prev => ({ ...prev, language: lang }))}
+              continuous={voiceSettings.continuous}
+              onContinuousChange={(cont) => setVoiceSettings(prev => ({ ...prev, continuous: cont }))}
+              interimResults={voiceSettings.interimResults}
+              onInterimResultsChange={(interim) => setVoiceSettings(prev => ({ ...prev, interimResults: interim }))}
+            />
+
             {/* Voice input button */}
             <EnhancedVoiceInput
               onTranscript={handleVoiceTranscript}
               isListening={isVoiceListening}
               onListeningChange={setIsVoiceListening}
+              language={voiceSettings.language}
+              continuous={voiceSettings.continuous}
+              interimResults={voiceSettings.interimResults}
             />
 
             {/* Send button */}

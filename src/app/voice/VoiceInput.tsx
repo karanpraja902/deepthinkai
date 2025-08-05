@@ -5,9 +5,19 @@ interface VoiceInputProps {
   onTranscript: (text: string) => void;
   isListening: boolean;
   onListeningChange: (listening: boolean) => void;
+  language?: string;
+  continuous?: boolean;
+  interimResults?: boolean;
 }
 
-export default function VoiceInput({ onTranscript, isListening, onListeningChange }: VoiceInputProps) {
+export default function VoiceInput({ 
+  onTranscript, 
+  isListening, 
+  onListeningChange,
+  language = 'en-US',
+  continuous = false,
+  interimResults = true
+}: VoiceInputProps) {
   const [isSupported, setIsSupported] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
@@ -22,9 +32,9 @@ export default function VoiceInput({ onTranscript, isListening, onListeningChang
       
              // Initialize speech recognition
        const recognition = new SpeechRecognition();
-       recognition.continuous = false; // Set to false to avoid continuous errors
-       recognition.interimResults = true;
-       recognition.lang = 'en-US';
+       recognition.continuous = continuous; // Use prop instead of hardcoded false
+       recognition.interimResults = interimResults;
+       recognition.lang = language;
       
              recognition.onstart = () => {
          console.log('Voice recognition started');
@@ -133,7 +143,7 @@ export default function VoiceInput({ onTranscript, isListening, onListeningChang
          clearTimeout(timeoutRef.current);
        }
      };
-  }, [onTranscript, onListeningChange]);
+  }, [onTranscript, onListeningChange, language, continuous, interimResults]);
 
      const toggleListening = () => {
      if (!recognitionRef.current) return;
