@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from "react";
-
+//This component provides a visual countdown timer for voice recognition sessions.
 interface VoiceTimerProps {
   isListening: boolean;
   duration: number; // in seconds
@@ -8,6 +8,7 @@ interface VoiceTimerProps {
 }
 
 export default function VoiceTimer({ isListening, duration, onTimeout }: VoiceTimerProps) {
+  
   const [timeLeft, setTimeLeft] = useState(duration);
 
   useEffect(() => {
@@ -71,3 +72,17 @@ export default function VoiceTimer({ isListening, duration, onTimeout }: VoiceTi
     </div>
   );
 } 
+// Implementation Priority
+// High Priority: Create useSpeechRecognition hook
+// High Priority: Extract error handling utilities
+// Medium Priority: Create reusable UI components
+// Medium Priority: Extract constants and configurations
+// Low Priority: Standardize styling patterns
+// 💡 Benefits of Refactoring
+// Reduced code duplication by ~60-70%
+// Easier maintenance - changes in one place
+// Better testing - isolated, testable utilities
+// Improved consistency - standardized behavior
+// Enhanced reusability - components can be used elsewhere
+// Better type safety - centralized TypeScript interfaces
+// The refactoring would significantly reduce the codebase size while making it more maintainable and extensible.
