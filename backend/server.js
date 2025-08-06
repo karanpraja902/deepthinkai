@@ -3,6 +3,10 @@ const cors=require("cors")
 const cookie=require("cookie-parser")
 const dotenv=require("dotenv")
 const cookieParser = require("cookie-parser")
+const { connect } = require("http2")
+const connecttoMongoDb = require("./database")
+const passport = require("passport");
+// const connectDB=require('connecttoMongoDB')
 
 dotenv.config()//
 const app=express()
@@ -20,7 +24,19 @@ app.use(
         credentials:true
     })
 )
+
+app.use(passport.initialize());
+
+app.use("/api/auth", require("./routes/authRoute"));
+
+app.use((error,req,res,next)=>{
+    console.log(error.status)
+    res.status[500].json({error:error||"sth went wrong"})
+})
+
 app.listen(PORT,()=>{
     console.log(`server is running on ${PORT}`)//do not use "", '' use ``
-    console.log(process.env.FRONTEND_URL)
+    console.log(`frontend running on ${process.env.FRONTEND_URL}`)
+  connecttoMongoDb()
+  
 })
