@@ -4,7 +4,12 @@ const { CaseLower } = require("lucide-react")
 const { type } = require("os")
 
 const UserSchema = new mongoose.Schema({
-    name:{
+    firstname:{
+        type:String,
+        trim:true,
+        required:[true,"Please enter name"]
+    },
+    lastname:{
         type:String,
         trim:true,
         required:[true,"Please enter name"]
@@ -12,6 +17,11 @@ const UserSchema = new mongoose.Schema({
     password:{
         type:String,
         required:[true,"Please enter password"],
+        minlength:6
+    },
+    confirmPassword:{
+        type:String,
+        required:[true,"Please enter confirm password"],
         minlength:6
     },
     email:{

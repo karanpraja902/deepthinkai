@@ -2,6 +2,7 @@
 //The layout.tsx file is a root layout in Next.js 13+ App Router. It's a special file that wraps around all pages in your application and provides the basic HTML structure.
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthProvider } from "@/components/AuthProvider";
 
 export const metadata: Metadata = {
   title: "DeepThink Chat",
@@ -27,7 +28,9 @@ export default function RootLayout({
         />
       </head>
       <body className="h-full bg-background text-foreground antialiased">
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

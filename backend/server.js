@@ -28,7 +28,8 @@ app.use(
 app.use(passport.initialize());//*** */
 
 app.use("/api/auth", require("./routes/authRoute"));
-
+app.use("/api/chat", require("./routes/chatRoute"));
+app.use("/api/conversation",require("./routes/conversationRoute"))
 app.use((error,req,res,next)=>{
     console.log(error.status)
     res.status[500].json({error:error||"sth went wrong"})

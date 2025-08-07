@@ -1,13 +1,13 @@
-const { error } = require('console')
 const User=require('../models/userModel')
 const jwt=require('jsonwebtoken')
-const { use } = require('react')
+
 
 exports.register= async (req,res)=>{
     try{
         console.log("register email")
-        const {name,email,password}=req.body
-        if(!name||!email||!password){
+        const {firstname,lastname,email,password,confirmPassword}=req.body
+        console.log({firstname:firstname,lastname:lastname,email:email,password:password,confirmPassword:confirmPassword})
+        if(!firstname||!lastname||!email||!password||!confirmPassword){
             return res.status(400).json({error:"Please fill the required fields"})
         }
         
@@ -17,22 +17,26 @@ exports.register= async (req,res)=>{
         }
 
         const user = await User.create({
-            name,
+            firstname,
+            lastname,
             email,
             password,
+            confirmPassword,
             provider:"credentials"
         })
         
         const token = jwt.sign({id:user._id,email:user.email},process.env.JWT_SECRET_KEY,{expiresIn:"30d"})
+console.log({token:token})
         res.cookie("auth_token",token,{
             httpOnly:true,
             secure:true,
             samesite:"none"
         })
-        
+        console.log({user:user})
         return res.status(201).json({
             id:user._id,
-            name:user.name,
+            firstname:user.firstname,
+            lastname:user.lastname,
             email:user.email,
             message:"User registered successfully"
         })
@@ -119,6 +123,19 @@ res.status(500).json({error:error.message})
             res.status(500).json({error:error.message})
         }
     }
+exports.logout = async (req, res) => {
+    try {
+        res.clearCookie("auth_token", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        });
+        res.status(200).json({ message: "Logged out successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 //200 ok
 //201 created
 //202 accepted
