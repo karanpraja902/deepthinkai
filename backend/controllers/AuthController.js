@@ -1,5 +1,5 @@
 const { error } = require('console')
-const User=require('../models/UserModel')
+const User=require('../models/userModel')
 const jwt=require('jsonwebtoken')
 const { use } = require('react')
 
@@ -46,6 +46,7 @@ res.status(500).json({error:error.message})
 exports.login=async (req,res)=>{
 try{
     const {email,password}=req.body
+    
     if(!email||!password){
         return res.status(400).json({error:"Please fill the required fields"})
     }
@@ -55,16 +56,20 @@ try{
         return res.status(401).json({error:"User not found"})
     }
 
+    console.log(`user:${user}`)
     const isMatch=await user.comparePassword(password)
+    console.log(`isMatch:${isMatch}`)
     if(!isMatch){
         return res.status(401).json({error:"Invalid credentials"})
     }
-    const token=await jwt.sign({email:user.email,id:user._id},process.env.JWT_SECRET_KEY,{expiresIn:"30d"})
+    const token=jwt.sign({email:user.email,id:user._id},process.env.JWT_SECRET_KEY,{expiresIn:"30d"})
+    console.log(`login token:${token}`)
     res.cookie("auth_token",token,{
         httpOnly:true,
         samesite:"none",
         secure:true
-    })
+    })//Sets a cookie named "auth_token" with the value of the variable token in the HTTP response.
+    
 res.status(202).json({
     user:{id:user._id,
     email:user.email,
@@ -79,7 +84,7 @@ res.status(202).json({
 
 
 }catch(error){
-res.status(500).json({error:"invalid credentials"})
+res.status(500).json({error:error.message})
 }
     }
 
