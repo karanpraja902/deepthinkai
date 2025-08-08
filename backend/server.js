@@ -25,7 +25,7 @@ app.use(
     })
 )
 
-app.use(passport.initialize());//*** */
+app.use(passport.initialize());//***
 
 app.use("/api/auth", require("./routes/authRoute"));
 app.use("/api/chat", require("./routes/chatRoute"));

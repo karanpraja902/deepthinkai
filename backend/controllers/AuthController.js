@@ -33,13 +33,14 @@ console.log({token:token})
             samesite:"none"
         })
         console.log({user:user})
-        return res.status(201).json({
+        return res.status(201).json({user:{
             id:user._id,
             firstname:user.firstname,
             lastname:user.lastname,
             email:user.email,
-            message:"User registered successfully"
-        })
+            
+        },token:token,
+        message:"User registered successfully"})
     }catch(error){
 res.status(500).json({error:error.message})
     }
@@ -71,7 +72,8 @@ try{
     res.cookie("auth_token",token,{
         httpOnly:true,
         samesite:"none",
-        secure:true
+        secure:true,
+        maxAge:30**24*60*60*1000//30 days
     })//Sets a cookie named "auth_token" with the value of the variable token in the HTTP response.
     
 res.status(202).json({
@@ -81,6 +83,7 @@ res.status(202).json({
     profilePicture:user.profilePicture,
     provider:user.provider
 },
+token:token,
  message:"user logged in successfully"
  });
 

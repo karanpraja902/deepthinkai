@@ -2,9 +2,18 @@ const jwt=require("jsonwebtoken")
 
 const authMiddleWare=(req,res,next)=>{
     console.log("AuthMiddleWare")
-    const token=req?.cookie?.auth_token
-    console.log(`token:${token}`)
-    // token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3R1c2VyNkBleGFtcGxlLmNvbTUiLCJpZCI6IjY4OTQ0MDg3MmMwZjlkMDE2NTYxM2Y5YyIsImlhdCI6MTc1NDU0Njk5OCwiZXhwIjoxNzU3MTM4OTk4fQ.PsPdZHnX5ng7LByl-X_WSml1ZLAIuOC1jLmc4nwxeis
+    let token=null;
+    if (req.cookies && req.cookies.auth_token) {
+        token = req.cookies.auth_token;
+    }
+    // If no cookie, try Authorization header (Bearer token)
+    else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        token = req.headers.authorization.substring(7);
+    }
+    
+    console.log(`token: ${token}`);
+
+
     if(!token){
         res.status(400).json({error:"Authorization failed, access denied!"})
     }

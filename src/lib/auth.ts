@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { headers } from 'next/headers';
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
@@ -23,13 +24,10 @@ class AuthService {
   private listeners: ((state: AuthState) => void)[] = [];
 
   constructor() {
-    // Initialize with loading state
     this.isLoading = true;
     this.notifyListeners();
-    // Check for existing token on initialization
     this.checkAuthStatus();
   }
-//why notify listeners?
 
   private notifyListeners() {
     const state: AuthState = {
@@ -47,19 +45,39 @@ class AuthService {
     };
   }
 
+  // Store token in localStorage
+  private setToken(token: string) {
+    localStorage.setItem('auth_token', token);
+  }
+
+  // Get token from localStorage
+  private getToken(): string | null {
+    return localStorage.getItem('auth_token');
+  }
+
+  // Remove token from localStorage
+  private removeToken() {
+    localStorage.removeItem('auth_token');
+  }
+
   async signIn(email: string, password: string): Promise<{ success: boolean; error?: string }> {
     try {
       const response = await axios.post(`${API_BASE_URL}/auth/login`, {
         email,
         password
       }, {
-        withCredentials: true // Important for cookies
+        withCredentials: true
       });
 
       this.user = response.data.user;
       this.isAuthenticated = true;
-      this.notifyListeners();
       
+      // Store token in localStorage
+      if (response.data.token) {
+        this.setToken(response.data.token);
+      }
+      
+      this.notifyListeners();
       return { success: true };
     } catch (error: any) {
       return { 
@@ -80,6 +98,11 @@ class AuthService {
         withCredentials: true
       });
 
+      // Store token if provided
+      if (response.data.token) {
+        this.setToken(response.data.token);
+      }
+
       return { success: true };
     } catch (error: any) {
       return { 
@@ -99,12 +122,14 @@ class AuthService {
     } finally {
       this.user = null;
       this.isAuthenticated = false;
+      this.removeToken(); // Remove token from localStorage
       this.notifyListeners();
     }
   }
 
   async checkAuthStatus(): Promise<void> {
     try {
+      // First try to get user from server using HTTP-only cookie
       const response = await axios.get(`${API_BASE_URL}/auth/me`, {
         withCredentials: true
       });
@@ -112,8 +137,28 @@ class AuthService {
       this.user = response.data.user;
       this.isAuthenticated = true;
     } catch (error) {
-      this.user = null;
-      this.isAuthenticated = false;
+      // If server request fails, try using localStorage token
+      const token = this.getToken();
+      if (token) {
+        try {
+          const response = await axios.get(`${API_BASE_URL}/auth/me`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          
+          this.user = response.data.user;
+          this.isAuthenticated = true;
+        } catch (tokenError) {
+          // Token is invalid, remove it
+          this.removeToken();
+          this.user = null;
+          this.isAuthenticated = false;
+        }
+      } else {
+        this.user = null;
+        this.isAuthenticated = false;
+      }
     } finally {
       this.isLoading = false;
       this.notifyListeners();
@@ -130,3 +175,30 @@ class AuthService {
 }
 
 export const authService = new AuthService();
+
+// Configure axios to automatically include token in requests
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Handle token expiration
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token expired or invalid
+      localStorage.removeItem('auth_token');
+      // You can trigger a logout here if needed
+    }
+    return Promise.reject(error);
+  }
+);
