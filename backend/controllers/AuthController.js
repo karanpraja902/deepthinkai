@@ -73,7 +73,7 @@ try{
         httpOnly:true,
         samesite:"none",
         secure:true,
-        maxAge:30**24*60*60*1000//30 days
+        maxAge:30*24*60*60*1000//30 days
     })//Sets a cookie named "auth_token" with the value of the variable token in the HTTP response.
     
 res.status(202).json({

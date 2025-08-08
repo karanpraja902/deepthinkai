@@ -1,8 +1,9 @@
-const jwt=require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
-const authMiddleWare=(req,res,next)=>{
-    console.log("AuthMiddleWare")
-    let token=null;
+const authMiddleWare = (req, res, next) => {
+    console.log("AuthMiddleWare");
+    let token = null;
+    
     if (req.cookies && req.cookies.auth_token) {
         token = req.cookies.auth_token;
     }
@@ -13,17 +14,17 @@ const authMiddleWare=(req,res,next)=>{
     
     console.log(`token: ${token}`);
 
-
-    if(!token){
-        res.status(400).json({error:"Authorization failed, access denied!"})
+    if (!token) {
+        return res.status(401).json({ error: "Authorization failed, access denied!" });
     }
 
-    try{
-        const decode=jwt.verify(token,process.env.JWT_SECRET_KEY)
-        req.user=decode
-        next()
-    }catch(error){
-        res.status(500).json({error:"token is invalid!"})
+    try {
+        const decode = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        req.user = decode;
+        next();
+    } catch (error) {
+        return res.status(401).json({ error: "Token is invalid!" });
     }
-}
-module.exports=authMiddleWare;
+};
+
+module.exports = authMiddleWare;
