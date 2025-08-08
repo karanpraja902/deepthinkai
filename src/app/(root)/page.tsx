@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import ChatInput from "./chat/ChatInput";
+import ChatInput from "./chatInput/ChatInput";
 import { ProtectedRoute } from "../../components/ProtectedRoute";
 import { useAuth } from "@/components/AuthProvider";
 

@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema({
         required:[true,"Please enter password"],
         minlength:6
     },
-    confirmPassword:{
+    confirmpassword:{
         type:String,
         required:[true,"Please enter confirm password"],
         minlength:6
@@ -45,16 +45,22 @@ type:String,
 
 },{timestamps:true})
 
-UserSchema.pre('save',async function(next){
-    if(!this.isModified('password')||!this.password)return next()
-        try{
-    const salt=await bycrypt.genSalt(10);
-    this.password=await bycrypt.hash(this.password,salt);
-    next();
-        }catch(error){
-            next(error)
-        }
-    })
+UserSchema.pre('save', async function(next) {
+    // Skip password hashing for Google users
+    if (this.provider === 'google') {
+        return next();
+    }
+    
+    if (!this.isModified('password') || !this.password) return next();
+    
+    try {
+        const salt = await bycrypt.genSalt(10);
+        this.password = await bycrypt.hash(this.password, salt);
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
     UserSchema.methods.comparePassword=async function(candidatePassword){
 if(!this.password) return false;
 return bycrypt.compare(candidatePassword,this.password)

@@ -1,20 +1,18 @@
-const express=require("express")
-const authMiddleWare=require("../middlewares/authmiddleware")
-const {register,login,googleCallback,getCurrentUser,logout}=require("../controllers/authController")
-const passport=require("passport")
+const express = require("express");
+const authMiddleWare = require("../middlewares/authmiddleware");
+const { register, login, googleCallback, getCurrentUser, logout } = require("../controllers/authController");
+const passport = require("passport");
 
-const router=express.Router();//no router ..case R n r
+const router = express.Router();
 
-router.post('/register',register)
+router.post('/register', register);
+router.post('/login', login);
+router.get('/me', authMiddleWare, getCurrentUser);
 
-router.post('/login',login)
+// Fix the callback route name to match the strategy
+router.get('/google', passport.authenticate("google", { scope: ['profile', 'email'] }));
+router.get('/google/callback', passport.authenticate('google', { session: false, failureRedirect: '/sign-in' }), googleCallback);
 
-router.get('/me', authMiddleWare,getCurrentUser)//first it will check the token then it will retrieve the current user
+router.post('/logout', logout);
 
-router.get('/google', passport.authenticate("google",{scope:['profile','email']}))
-
-router.get('/googlecallback',passport.authenticate('google',{session:false,failureRedirect:'/sign-in'}),googleCallback)//if fails
-
-router.post('/logout', logout)
-
-module.exports=router;
+module.exports = router;

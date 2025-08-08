@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { authService } from "@/lib/auth";
+import { useAuth } from "@/components/AuthProvider";
 
 const SignInPage = () => {
   const [password, setPassword] = useState("");
@@ -14,6 +15,16 @@ const SignInPage = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const {signInWithGoogle}=useAuth()
+
+  const handleGoogleSignIn = async () => {
+    console.log("handleGoogleSignIn");
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      setError("Google sign-in failed. Please try again.");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,7 +35,7 @@ const SignInPage = () => {
       const result = await authService.signIn(email, password);
       
       if (result.success) {
-        router.push("/chat");
+        router.push("/"); // Redirect to homepage instead of /chat
       } else {
         setError(result.error || "Invalid email or password");
       }
@@ -183,10 +194,7 @@ const SignInPage = () => {
                <div>
                  <button
                    type="button"
-                   onClick={() => {
-                     // Add your Google OAuth logic here
-                     console.log("Google sign in clicked");
-                   }}
+                   onClick={handleGoogleSignIn}
                    className="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                  >
                    <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">

@@ -13,10 +13,10 @@ const SignUpPage = () => {
     lastname: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmpassword: ""
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showconfirmpassword, setShowconfirmpassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -32,10 +32,10 @@ const SignUpPage = () => {
     e.preventDefault();//why do we use it?
     setIsLoading(true);
     setError("");
-    const {firstname,lastname,email,password,confirmPassword}=formData;
+    const {firstname,lastname,email,password,confirmpassword}=formData;
 
     // Validate passwords match
-    if (password !== confirmPassword) {
+    if (password !== confirmpassword) {
       setError("Passwords do not match");
       setIsLoading(false);
       return;
@@ -50,10 +50,16 @@ const SignUpPage = () => {
     
     
     try {
-      const result = await authService.signUp(firstname, lastname, email, password);
+      const result = await authService.signUp(firstname, lastname, email, password,confirmpassword);
       
       if (result.success) {
-        router.push("/sign-in");
+        // Auto-login after successful sign-up
+        const loginResult = await authService.signIn(email, password);
+        if (loginResult.success) {
+          router.push("/"); // Redirect to homepage instead of sign-in
+        } else {
+          router.push("/sign-in"); // Fallback to sign-in if auto-login fails
+        }
       } else {
         setError(result.error || "Failed to create account. Please try again.");
       }
@@ -208,27 +214,27 @@ const SignUpPage = () => {
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="confirmpassword" className="block text-sm font-medium text-gray-700 mb-1">
                   Confirm password
                 </label>
                 <div className="relative">
                   <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
+                    id="confirmpassword"
+                    name="confirmpassword"
+                    type={showconfirmpassword ? "text" : "password"}
                     autoComplete="new-password"
                     required
-                    value={formData.confirmPassword}
+                    value={formData.confirmpassword}
                     onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Confirm your password"
                   />
                   <button
                     type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    onClick={() => setShowconfirmpassword(!showconfirmpassword)}
                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-gray-500"
                   >
-                    {showConfirmPassword ? "Hide" : "Show"}
+                    {showconfirmpassword ? "Hide" : "Show"}
                   </button>
                 </div>
               </div>

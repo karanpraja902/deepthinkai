@@ -72,9 +72,9 @@ class AuthService {
       this.isAuthenticated = true;
       
       // Store token in localStorage
-      if (response.data.token) {
-        this.setToken(response.data.token);
-      }
+      // if (response.data.token) {
+      //   this.setToken(response.data.token);
+      // }
       
       this.notifyListeners();
       return { success: true };
@@ -86,13 +86,14 @@ class AuthService {
     }
   }
 
-  async signUp(firstname: string, lastname: string, email: string, password: string): Promise<{ success: boolean; error?: string }> {
+  async signUp(firstname: string, lastname: string, email: string, password: string,confirmpassword: string): Promise<{ success: boolean; error?: string }> {
     try {
       const response = await axios.post(`${API_BASE_URL}/auth/register`, {
         firstname,
         lastname,
         email,
-        password
+        password,
+        confirmpassword
       }, {
         withCredentials: true
       });

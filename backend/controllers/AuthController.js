@@ -5,9 +5,9 @@ const jwt=require('jsonwebtoken')
 exports.register= async (req,res)=>{
     try{
         console.log("register email")
-        const {firstname,lastname,email,password,confirmPassword}=req.body
-        console.log({firstname:firstname,lastname:lastname,email:email,password:password,confirmPassword:confirmPassword})
-        if(!firstname||!lastname||!email||!password||!confirmPassword){
+        const {firstname,lastname,email,password,confirmpassword}=req.body
+        console.log({firstname:firstname,lastname:lastname,email:email,password:password,confirmpassword:confirmpassword})
+        if(!firstname||!lastname||!email||!password||!confirmpassword){
             return res.status(400).json({error:"Please fill the required fields"})
         }
         
@@ -21,7 +21,7 @@ exports.register= async (req,res)=>{
             lastname,
             email,
             password,
-            confirmPassword,
+            confirmpassword,
             provider:"credentials"
         })
         
@@ -113,7 +113,10 @@ res.status(500).json({error:error.message})
 res.status(500).json({error:error.message})
         }
     }
+
+
     exports.googleCallback=async (req,res)=>{
+        console.log(`googleuser:${req.user}`)
         try{
             const token=jwt.sign({id:req.user.id,email:req.user.email},process.env.JWT_SECRET_KEY,{expiresIn:"30d"})
             res.cookie("auth_token",token,{
@@ -126,6 +129,8 @@ res.status(500).json({error:error.message})
             res.status(500).json({error:error.message})
         }
     }
+
+
 exports.logout = async (req, res) => {
     try {
         res.clearCookie("auth_token", {
