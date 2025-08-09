@@ -1,29 +1,52 @@
-"use client"
+"use client";
+import ChatInput from "@/components/chat/ChatInput";
+import ChatSidebar from "@/components/chat/ChatSidebar";
+import { userAuthStore } from "@/store/authStore";
+import { useChatStore } from "@/store/chatStore";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
-import { useAuth } from '@/components/AuthProvider';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-
-export default function RootPage() {
-  const { isAuthenticated, isLoading } = useAuth();
+export default function Home() {
+  const { isAuthenticated, isLoading } = userAuthStore();
+  const { createChat, isLoading: createChatLoading } = useChatStore();
   const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoading) {
-      if (isAuthenticated) {
-        // If user is authenticated, redirect to the main app
-        router.push('/chat');
-      } else {
-        // If user is not authenticated, redirect to landing page
-        router.push('/landing');
+  const handleSendMesaage = async (message: string) => {
+    if (isAuthenticated && !createChatLoading) {
+      try {
+        const chat = await createChat("New Chat");
+        router.push(
+          `/chat/${chat?._id}?message=${encodeURIComponent(message)}`
+        );
+      } catch (error) {
+        console.log(error);
+        toast.error("failed to create chat");
       }
     }
-  }, [isAuthenticated, isLoading, router]);
-
-  // Show loading spinner while checking auth status
+  };
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+    <div className="flex h-screen">
+      <ChatSidebar />
+      <div className="flex flex-col mt-60 mx-auto">
+        <div className="flex flex-col items-center gap-2 md:ml-40">
+          <div className="flex items-center gap-4 justify-center">
+            <div className="h-16 w-16">
+              <img
+                src="/images/deepthink-small-logo.svg"
+                alt="deepthink-logo"
+                className="h-full w-full"
+              />
+            </div>
+            <h2 className="text-2xl font-bold ">Hi, I'm DeepThink.</h2>
+          </div>
+          <p className="text-center text-muted-foreground">
+            How can help you today
+          </p>
+        </div>
+        <div className="fixed left-0 top-30 right-0 bottom-0 mx-auto flex px-4 justify-center items-center">
+          <ChatInput onSubmit={handleSendMesaage} isLoading={isLoading} />
+        </div>
+      </div>
     </div>
   );
 }
