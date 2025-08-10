@@ -147,7 +147,8 @@ export const useChatStore = create<ChatState>()((set, get) => ({
               try {
                 const parsed = JSON.parse(data);
                 if (parsed.content) {
-                  assistantResponse += parsed.content;
+                  const cleanedContent = cleanAIResponse(parsed.content);
+                  assistantResponse += cleanedContent;
                   set((state) => {
                     const updated = [...state.messages];
                     const last = updated[updated.length - 1];
@@ -181,7 +182,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         }
       }
 
-      await get().fetchChat(chatId)
+      // await get().fetchChat(chatId)
 
     } catch (error:any) {
          const message = error.response?.data?.error;
@@ -205,3 +206,8 @@ export const useChatStore = create<ChatState>()((set, get) => ({
     }
   },
 }));
+
+// Add this helper function
+const cleanAIResponse = (content: string) => {
+  return content.replace(/\[[^\]]+\]/g, '');
+};

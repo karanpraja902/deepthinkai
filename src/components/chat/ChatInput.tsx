@@ -23,15 +23,23 @@ const ChatInput = ({ onSubmit, isLoading }: ChatInputProps) => {
     }
   }, [transcript]);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      e.stopPropagation();
-      handleSubmit(e);
+      console.log("handleKeydown applied")
+      
+      if (input.trim()) {
+        onSubmit(input);
+        setInput("");
+      }
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
+    if (isSubmitting) return; // Prevent double submission
+    
     console.log("handleSubmit")
     e.preventDefault();
     e.stopPropagation();
@@ -39,8 +47,10 @@ const ChatInput = ({ onSubmit, isLoading }: ChatInputProps) => {
 
     if (input.trim()) {
       onSubmit(input);
+      console.log("handleSubmit applied")
       setInput("");
     }
+    setIsSubmitting(false);
   };
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -54,7 +64,7 @@ const ChatInput = ({ onSubmit, isLoading }: ChatInputProps) => {
     <div
       className={`w-full max-w-4xl md:ml-64 rounded-xl bg-[#f4f4f6] py-4 px-4 shadow-[0_-1px_6px_rgba(0,0,0,0.05)]`}
     >
-      <form onSubmit={handleSubmit} className="w-full">
+      <form className="w-full" onSubmit={handleSubmit}>
         <Textarea
           ref={textareaRef}
           placeholder={

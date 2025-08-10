@@ -48,12 +48,12 @@ const page = () => {
     <div className="flex flex-col min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="flex justify-center mb-12">
         <Image
-                      src="/images/deepthink-logo.svg"
-            alt="deepthink-logo"
-          width={230}
-          height={230}
-          className="rounded-full"
-        />
+  src="/images/deepthink-logo.svg"
+  alt="deepthink-logo"
+  width={230}
+  height={230}
+  className="rounded-full w-auto h-auto"
+/>
       </div>
       <Card className="w-full max-w-[430px]">
         <CardHeader className="space-y-1 text-left">

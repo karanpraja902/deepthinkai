@@ -27,79 +27,89 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   
   const handleCopy = (content: string) => {
     navigator.clipboard.writeText(content);
-    toast.success("copied");
+    toast.success("Copied to clipboard!");
   };
 
   return (
     <div
       className={cn(
-        "flex w-full items-start gap-4 p-4 rounded-lg mb-4 relative",
-        isUser 
-          ? "justify-start bg-blue-50" 
-          : "justify-end bg-muted/50"
+        "flex w-full items-start gap-4 p-4 mb-6 relative",
+        isUser ? "justify-end" : "justify-start"
       )}
     >
       {isUser ? (
-        // User message - left side
+        // User message - right side
         <>
-          <Avatar className="h-8 w-8">
+          <div className="flex-1 max-w-[70%] space-y-2">
+            {isUserLoading ? (
+              <Loader type="user" position="right" />
+            ) : (
+              <div className="bg-blue-500 text-white p-4 rounded-2xl rounded-br-md">
+                <div className="prose prose-sm max-w-none text-white">
+                  <Markdown content={message.content} />
+                </div>
+              </div>
+            )}
+            
+            {/* Action buttons for user message */}
+            {!isUserLoading && (
+              <div className="flex justify-end gap-2 mt-2">
+                <Copy
+                  className="h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700"
+                  onClick={() => handleCopy(message.content)}
+                />
+              </div>
+            )}
+          </div>
+
+          <Avatar className="h-8 w-8 flex-shrink-0">
             {user?.profilePicture ? (
               <AvatarImage
                 src={user?.profilePicture}
                 alt={user?.name}
               />
             ) : (
-              <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
+              <AvatarFallback className="text-black bg-">
+                {user?.name?.[0]}
+              </AvatarFallback>
             )}
           </Avatar>
-
-          <div className="flex-1 space-y-2 max-w-[70%]">
-            {isUserLoading ? (
-              <Loader type="user" position="left" className="mr-2" />
-            ) : (
-              <div className="prose prose-sm max-w-none">
-                <Markdown content={message.content} />
-              </div>
-            )}
-          </div>
-
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <Copy
-              className="h-5 w-5 text-gray-600 cursor-pointer hover:text-gray-800"
-              onClick={() => handleCopy(message.content)}
-            />
-          </div>
         </>
       ) : (
-        // AI message - right side
+        // AI message - left side
         <>
-          <div className="flex-1 space-y-2 max-w-[70%] text-right">
-            {isAiLoading ? (
-              <Loader type="ai" />
-            ) : (
-              <div className="prose prose-sm max-w-none">
-                <Markdown content={message.content} />
-              </div>
-            )}
-          </div>
-
-          <Avatar className="h-8 w-8">
+          <Avatar className="h-8 w-8 flex-shrink-0">
             <AvatarImage src="/images/deepthink-logo.svg" alt="DeepThink" />
           </Avatar>
 
-          <div className="absolute left-4 -bottom-10 transform -translate-y-1/2 flex gap-3">
-            <Copy
-              className="h-5 w-5 text-gray-600 cursor-pointer hover:text-gray-800"
-              onClick={() => handleCopy(message.content)}
-            />
-            <ThumbsUp
-              className="h-5 w-5 text-green-600 cursor-pointer hover:text-green-700"
-              onClick={() => console.log("liked")}
-            />
-            <ThumbsDown
-              className="h-5 w-5 text-red-600 cursor-pointer hover:text-red-700"
-              onClick={() => console.log("unliked")}
-            />
+          <div className="flex-1 max-w-[70%] space-y-2">
+            {isAiLoading ? (
+              <Loader type="ai" position="left" />
+            ) : (
+              <div className="bg-gray-100 p-4 rounded-2xl rounded-bl-md">
+                <div className="prose prose-sm max-w-none">
+                  <Markdown content={message.content} />
+                </div>
+              </div>
+            )}
+            
+            {/* Action buttons for AI message */}
+            {!isAiLoading && (
+              <div className="flex gap-2 mt-2">
+                <Copy
+                  className="h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700"
+                  onClick={() => handleCopy(message.content)}
+                />
+                <ThumbsUp
+                  className="h-4 w-4 text-gray-500 cursor-pointer hover:text-green-600"
+                  onClick={() => console.log("liked")}
+                />
+                <ThumbsDown
+                  className="h-4 w-4 text-gray-500 cursor-pointer hover:text-red-600"
+                  onClick={() => console.log("disliked")}
+                />
+              </div>
+            )}
           </div>
         </>
       )}
