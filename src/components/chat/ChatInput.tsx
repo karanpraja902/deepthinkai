@@ -23,17 +23,23 @@ const ChatInput = ({ onSubmit, isLoading }: ChatInputProps) => {
     }
   }, [transcript]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (input.trim()) {
-      onSubmit(input);
-      setInput("");
-    }
-  };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
+      e.stopPropagation();
       handleSubmit(e);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    console.log("handleSubmit")
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("input",input)
+
+    if (input.trim()) {
+      onSubmit(input);
+      setInput("");
     }
   };
   useEffect(() => {

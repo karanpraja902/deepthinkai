@@ -25,7 +25,7 @@ const Conversations = ({ id }: { id: string }) => {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (id) {
+    if (id && id !== "new") {
       fetchChat(id);
     }
   }, [id, fetchChat]);
@@ -42,7 +42,7 @@ const Conversations = ({ id }: { id: string }) => {
   }, []);
 
   useEffect(() => {
-    if (!hasSentRef.current && initialMessage) {
+    if (!hasSentRef.current && initialMessage && id !== "new") {
       sendMessage(id, initialMessage);
       hasSentRef.current = true;
 
@@ -56,7 +56,11 @@ const Conversations = ({ id }: { id: string }) => {
 
   const handleSendMesaage = async (message: string) => {
     try {
-      await sendMessage(id, message);
+      if (id === "new") {
+        await sendMessage("", message);
+      } else {
+        await sendMessage(id, message);
+      }
     } catch (error) {
       console.log(error);
     }

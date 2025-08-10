@@ -61,7 +61,7 @@ export const userAuthStore = create<AuthState>() (
                 try {
                     set({error:null,isLoading:true});
                     const {data}= await api.post("/auth/logout", {})
-                    set({ user:null,isAuthenticated:false, isLoading:false})
+                    set({ user:null, isAuthenticated:false, isLoading:false})
                 } catch (error:any) {
                     const message= error.response?.data?.error;
                     set({error:message,isLoading:false})

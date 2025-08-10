@@ -1,0 +1,115 @@
+{
+  "Console Log": {
+    "prefix": "cl",
+    "body": [
+      "console.log('$1');"
+    ],
+    "description": "Console log statement"
+  },
+  "Console Log with Label": {
+    "prefix": "cll",
+    "body": [
+      "console.log('$1:', $2);"
+    ],
+    "description": "Console log with label and value"
+  },
+  "Console Log Object": {
+    "prefix": "clo",
+    "body": [
+      "console.log('$1:', JSON.stringify($2, null, 2));"
+    ],
+    "description": "Console log object with pretty formatting"
+  },
+  "Console Log Error": {
+    "prefix": "cle",
+    "body": [
+      "console.error('$1:', $2);"
+    ],
+    "description": "Console error statement"
+  },
+  "Console Log Warning": {
+    "prefix": "clw",
+    "body": [
+      "console.warn('$1:', $2);"
+    ],
+    "description": "Console warning statement"
+  },
+  "Console Log Info": {
+    "prefix": "cli",
+    "body": [
+      "console.info('$1:', $2);"
+    ],
+    "description": "Console info statement"
+  },
+  "Console Log Table": {
+    "prefix": "clt",
+    "body": [
+      "console.table($1);"
+    ],
+    "description": "Console table for arrays/objects"
+  },
+  "Console Log Group": {
+    "prefix": "clg",
+    "body": [
+      "console.group('$1');",
+      "$2",
+      "console.groupEnd();"
+    ],
+    "description": "Console group for organizing logs"
+  },
+  "Console Log Time": {
+    "prefix": "cltime",
+    "body": [
+      "console.time('$1');",
+      "$2",
+      "console.timeEnd('$1');"
+    ],
+    "description": "Console time for performance measurement"
+  },
+  "Console Log Debug": {
+    "prefix": "cld",
+    "body": [
+      "console.log('🔍 DEBUG: $1');"
+    ],
+    "description": "Debug console log with emoji"
+  },
+  "Console Log Success": {
+    "prefix": "cls",
+    "body": [
+      "console.log('✅ SUCCESS: $1');"
+    ],
+    "description": "Success console log with emoji"
+  },
+  "Console Log Variable": {
+    "prefix": "clv",
+    "body": [
+      "console.log('$1 =', $1);"
+    ],
+    "description": "Console log variable name and value"
+  },
+  "Console Log Function": {
+    "prefix": "clf",
+    "body": [
+      "console.log('🚀 Function $1 called with:', $2);"
+    ],
+    "description": "Console log function call with parameters"
+  },
+  "Console Log API": {
+    "prefix": "clapi",
+    "body": [
+      "console.log('🌐 API $1:', $2);"
+    ],
+    "description": "Console log API related information"
+  },
+  "Console Log State": {
+    "prefix": "clstate",
+    "body": [
+      "console.log('📊 State Update:', {",
+      "  previous: $1,",
+      "  current: $2,",
+      "  timestamp: new Date().toISOString()",
+      "});"
+    ],
+    "description": "Console log state changes with timestamp"
+  }
+}

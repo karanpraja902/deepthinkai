@@ -1,7 +1,7 @@
 "use client"
 import { userAuthStore } from "@/store/authStore";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { Loader } from "./Loader";
 
 
@@ -13,13 +13,16 @@ export default function AuthProvider({children}:{children:React.ReactNode}) {
     const pathname = usePathname();
     const router = useRouter();
 
-
-console.log(user)
-    useEffect(() => {
+    // Memoize the userProfile call
+    const fetchUserProfile = useCallback(() => {
         if(!publicRoute.includes(pathname)){
             userProfile()
         }
-    },[userProfile,pathname])
+    }, [userProfile, pathname])
+
+    useEffect(() => {
+        fetchUserProfile()
+    },[fetchUserProfile])
 
     useEffect(() => {
         if(!isLoading) {
